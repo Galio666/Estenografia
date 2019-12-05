@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>Estenografia</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+        <script src='transformar.js'></script>
+        <script type="text/javascript" src="estenografia.json"></script>
+        <script type="text/javascript" src="estenografia2.json"></script>
+
+        <!-- -------------------------- MDB -------------------------------------------->
+        <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <!-- -------------------------- FIN MDB -------------------------------------------->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css"
+            rel="stylesheet" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js">
+        </script>
+        <!-- -------------------------- NADVAR -------------------------------------------->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarTogglerDemo01"
+                aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand" href="index.html">Letras Habladas</a>
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Inicio <span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="estenografía.html">Estenografía</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1"
+                            aria-disabled="true">Libros estenografiados</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+    </head>
+    <body>
+        <div class="jumbotron jumbotron-fluid">
+            <div align="center" class="container">
+                <form name="braille" onkeydown="guardar();">
+                    <textarea id="summernote" name="editordata"></textarea>
+                </form>
+
+                <button type="button" class="btn btn-info btn-lg"
+                    data-toggle="modal" data-target="#myModal"
+                    onclick="traducir();">Traducir texto</button>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close"
+                                    data-dismiss="modal">&times;</button>
+                                <a id="descargar" class="btn btn-primary
+                                    btn-lg">
+                                    Descarga</a>
+                                <h4 class="modal-title">Texto estenografiado</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p id="textoStenografiado">Some text in the
+                                    modal.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <span class="btn btn-primary btn-file btn-lg"> Cargar
+                    <input id="fileInput" class="file-input" type="file"
+                        size="50"
+                        onchange="processFiles(this.files)">
+                </span>
+                <div id="fileOutput"></div>
+            </div>
+        </div>
+    </body>
+
+    <footer>
+        <script>
+        $('#summernote').summernote({placeholder: 'Escribe tu texto...', tabsize: 5, height: 400});
+        
+        var traducir = function (texto) {
+            
+            contents = "";
+            plainText = "";
+            contents = $('#summernote').summernote('code');
+            plainText = $("<p>" + contents+ "</p>").text();     
+
+            var output = document.getElementById("textoStenografiado");
+            output.innerText = "";
+            var aux=myFunction(plainText);
+            texEst = ajustarTexto(myFunction(plainText),31,29);
+
+
+
+
+           if(aux=="diaga"){
+            output.innerText = "\\";
+            }else if(aux=="diago"){
+            output.innerText = "\\o";	
+            }
+
+            else if(aux=="diagoo"){
+            	output.innerText = "\\o<"
+            }
+
+
+
+            else{
+            output.innerText = texEst;            
+            }
+
+
+
+            guardar(texEst);
+            
+        };
+        
+        var guardar = function (texto) {
+            console.log("guardando...");
+            var contenido = $("#summernote").val()
+            var contenidoDeArchivo = contenido;
+            var elem = document.getElementById('descargar');
+            
+            elem.download = "archivo.bra";
+            elem.href = "data:application/octet-stream,"
+                + encodeURIComponent(texto);  
+        };
+        
+        
+        </script>
+    </footer>
+</html>
